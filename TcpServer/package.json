@@ -1,0 +1,20 @@
+{
+  "name": "tcp-server-client-on-electron",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trvoid/tcp-server-client-on-electron.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/trvoid/tcp-server-client-on-electron/issues"
+  },
+  "homepage": "https://github.com/trvoid/tcp-server-client-on-electron#readme"
+}
