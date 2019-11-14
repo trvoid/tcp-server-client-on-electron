@@ -1,22 +1,29 @@
 var net = require('net');
+var dateFormat = require('dateformat');
 
 var client = null;
 
 function logSent(msg) {
-    currentStr = $('#sent_msg').text();
-    newStr = (currentStr.length == 0) ? msg : currentStr + '\n' + msg
+    var currentStr = $('#sent_msg').text();
+    var dt = dateFormat(new Date(), 'yy-mm-dd hh:MM:ss');
+    var msgLine = `<${dt}> <${msg}>`;
+    var newStr = (currentStr.length == 0) ? msgLine : currentStr + '\n' + msgLine
     $('#sent_msg').text(newStr);
 }
 
 function logReceived(msg) {
-    currentStr = $('#received_msg').text();
-    newStr = (currentStr.length == 0) ? msg : currentStr + '\n' + msg
+    var currentStr = $('#received_msg').text();
+    var dt = dateFormat(new Date(), 'yy-mm-dd hh:MM:ss');
+    var msgLine = `<${dt}> <${msg}>`;
+    var newStr = (currentStr.length == 0) ? msgLine : currentStr + '\n' + msgLine
     $('#received_msg').text(newStr);
 }
 
 function logDebug(msg) {
-    currentStr = $('#debug_msg').text();
-    newStr = (currentStr.length == 0) ? msg : currentStr + '\n' + msg
+    var currentStr = $('#debug_msg').text();
+    var dt = dateFormat(new Date(), 'yy-mm-dd hh:MM:ss');
+    var msgLine = `<${dt}> <${msg}>`;
+    var newStr = (currentStr.length == 0) ? msgLine : currentStr + '\n' + msgLine
     $('#debug_msg').text(newStr);
 }
 
@@ -25,13 +32,13 @@ function getConn(host, port) {
         host: host,
         port: port
     }
-    logDebug('111');
+
     var clientSock = net.createConnection(option, function () {
         logDebug('Connection local address: ' + clientSock.localAddress + ":" + clientSock.localPort);
         logDebug('Connection remote address: ' + clientSock.remoteAddress + ":" + clientSock.remotePort);
         $('#connectButton').val('Disconnect');
     });
-    logDebug('222');
+
     clientSock.setTimeout(5000);
     clientSock.setEncoding('utf8');
 
@@ -66,7 +73,6 @@ function getConn(host, port) {
 
 function onConnectClick() {
     if (client == null) {
-        logDebug('connec1111');
         host = $('#host').val().trim();
         if (host.length == 0) {
             logDebug('Host is empty.');
@@ -82,7 +88,6 @@ function onConnectClick() {
 
         client = getConn(host, port);
     } else {
-        logDebug('connec2222');
         client.end();
     }
 }

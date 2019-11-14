@@ -8,5 +8,8 @@
     "start": "electron ."
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "dateformat": "^3.0.3"
+  }
 }

@@ -1,23 +1,30 @@
 var net = require('net');
+var dateFormat = require('dateformat');
 
 var server = null;
 var clients = {};
 
 function logSent(msg) {
-    currentStr = $('#sent_msg').text();
-    newStr = (currentStr.length == 0) ? msg : currentStr + '\n' + msg
+    var currentStr = $('#sent_msg').text();
+    var dt = dateFormat(new Date(), 'yy-mm-dd hh:MM:ss');
+    var msgLine = `<${dt}> <${msg}>`;
+    var newStr = (currentStr.length == 0) ? msgLine : currentStr + '\n' + msgLine
     $('#sent_msg').text(newStr);
 }
 
 function logReceived(msg) {
-    currentStr = $('#received_msg').text();
-    newStr = (currentStr.length == 0) ? msg : currentStr + '\n' + msg
+    var currentStr = $('#received_msg').text();
+    var dt = dateFormat(new Date(), 'yy-mm-dd hh:MM:ss');
+    var msgLine = `<${dt}> <${msg}>`;
+    var newStr = (currentStr.length == 0) ? msgLine : currentStr + '\n' + msgLine
     $('#received_msg').text(newStr);
 }
 
 function logDebug(msg) {
-    currentStr = $('#debug_msg').text();
-    newStr = (currentStr.length == 0) ? msg : currentStr + '\n' + msg
+    var currentStr = $('#debug_msg').text();
+    var dt = dateFormat(new Date(), 'yy-mm-dd hh:MM:ss');
+    var msgLine = `<${dt}> <${msg}>`;
+    var newStr = (currentStr.length == 0) ? msgLine : currentStr + '\n' + msgLine
     $('#debug_msg').text(newStr);
 }
 
