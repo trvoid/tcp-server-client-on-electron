@@ -1,7 +1,7 @@
 var net = require('net');
 
 var server = null;
-var client = null;
+var clients = {};
 
 function logSent(msg) {
     currentStr = $('#sent_msg').text();
@@ -46,21 +46,25 @@ function onClientConnected(sock) {
     var remoteAddress = sock.remoteAddress + ':' + sock.remotePort;
     logDebug('Connection[' + remoteAddress + '] established.');
 
+    clients[remoteAddress] = sock;
+    $('#clients').append(`<option value="${remoteAddress}">${remoteAddress}</option>`);
+
     sock.on('data', function(data) {
         data = data.toString('utf8').replace(/^\s+|\s+$/g, '');
         logReceived(data);
     });
 
     sock.on('close',  function () {
-        client = null;
         logDebug('Connection[' + remoteAddress + '] closed.');
+        delete clients[remoteAddress];
+        $(`#clients option[value="${remoteAddress}"]`).remove();
     });
 
     sock.on('error', function (err) {
         logDebug('Connection[' + remoteAddress + '] broken: ' + err.message);
+        delete clients[remoteAddress];
+        $(`#clients option[value="${remoteAddress}"]`).remove();
     });
-
-    client = sock;
 }
 
 function onStartClick() {
@@ -74,17 +78,24 @@ function onStartClick() {
 
         server = createServer(port);
     } else {
+        for (var remoteAddress in clients) {
+            clients[remoteAddress].end();
+        }
         server.close();
     }
 }
 
 function onSendClick() {
-    if (client != null) {
-        var str = $('#sendText').val();
-        client.write(str + '\r\n', 'UTF8', function() {
-            logSent(str);
-        });
+    var selectedClient = $('#clients').val();
+    if (selectedClient == null || selectedClient.length == 0) {
+        logDebug('Client not selected');
+        return;
     }
+
+    var str = $('#sendText').val();
+    clients[selectedClient].write(str + '\r\n', 'UTF8', function() {
+        logSent(str);
+    });
 }
 
 function onClearReceivedClick() {

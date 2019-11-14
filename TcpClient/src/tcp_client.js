@@ -15,25 +15,24 @@ function logReceived(msg) {
 }
 
 function logDebug(msg) {
-    currentStr = $('#log_msg').text();
+    currentStr = $('#debug_msg').text();
     newStr = (currentStr.length == 0) ? msg : currentStr + '\n' + msg
-    $('#log_msg').text(newStr);
+    $('#debug_msg').text(newStr);
 }
 
-function getConn(connName, host, port) {
+function getConn(host, port) {
     var option = {
         host: host,
         port: port
     }
-
+    logDebug('111');
     var clientSock = net.createConnection(option, function () {
-        logDebug('Connection name: ' + connName);
         logDebug('Connection local address: ' + clientSock.localAddress + ":" + clientSock.localPort);
         logDebug('Connection remote address: ' + clientSock.remoteAddress + ":" + clientSock.remotePort);
         $('#connectButton').val('Disconnect');
     });
-
-    clientSock.setTimeout(1000);
+    logDebug('222');
+    clientSock.setTimeout(5000);
     clientSock.setEncoding('utf8');
 
     clientSock.on('data', function (data) {
@@ -41,14 +40,20 @@ function getConn(connName, host, port) {
         logReceived(data);
     });
 
+    clientSock.on('close', function () {
+        logDebug('Connection closed.');
+        client = null;
+        $('#connectButton').val('Connect');
+    });
+
     clientSock.on('end', function () {
-        logDebug('Client socket disconnect.');
+        logDebug('Connection ended.');
         client = null;
         $('#connectButton').val('Connect');
     });
 
     clientSock.on('timeout', function () {
-        logDebug('Client connection timeout.');
+        logDebug('Connection timeout.');
     });
 
     clientSock.on('error', function (err) {
@@ -61,6 +66,7 @@ function getConn(connName, host, port) {
 
 function onConnectClick() {
     if (client == null) {
+        logDebug('connec1111');
         host = $('#host').val().trim();
         if (host.length == 0) {
             logDebug('Host is empty.');
@@ -74,8 +80,9 @@ function onConnectClick() {
         }
         port = parseInt(portStr, 10);
 
-        client = getConn('Probe', host, port);
+        client = getConn(host, port);
     } else {
+        logDebug('connec2222');
         client.end();
     }
 }
